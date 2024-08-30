@@ -35,6 +35,7 @@ def room_price_computation():
     from IPython.display import display, clear_output 
     from dotenv import load_dotenv 
     import google.generativeai as genai
+    import db_config
 
     # Configure generative AI API key
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
@@ -42,12 +43,12 @@ def room_price_computation():
     # Load environment variables
     load_dotenv()
 
-    # Database connection parameters
-    username = 'root'
-    password = 'iamukr77'
-    host = 'localhost'
-    port = '3306'  # Default MySQL port
-    database = 'smartstay'  # Your schema name
+    # Database connection parameters from db_config
+    username = db_config.username
+    password = db_config.password
+    host = db_config.host
+    port = db_config.port
+    database = db_config.database
 
     # Create an engine instance with provided credentials
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
@@ -505,7 +506,7 @@ def room_price_computation():
         
             # Send the PDF via email
             try:
-                yag = yagmail.SMTP("smartstaytcet@gmail.com", "vmla cyse ruho svsc")
+                yag = yagmail.SMTP(db_config.email, db_config.passw)
                 subject = "Your Booking Information"
                 body = "Dear Guest,\n\nPlease find attached your booking information.\n\nBest Regards,\nSmartStay Team"
                 yag.send(to=guest.email_id, subject=subject, contents=body, attachments=pdf_file_name)
